@@ -2,7 +2,7 @@
     <dbQueries>
         <dbQuery>
             <name>TESTSQL1</name>
-            <sql>SELECT 'XXX'</sql>
+            <sql>SELECT 'XXX' FROM DUAL</sql>
             <connectionName>TESTCONNECTION</connectionName>
         </dbQuery>
     </dbQueries>

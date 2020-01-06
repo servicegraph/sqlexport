@@ -1,9 +1,16 @@
 package com.servicegraph.fileExporter
 
-import com.servicegraph.FileExporter
+import com.servicegraph.data.DbResult
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVPrinter
+import java.io.FileWriter
 
 class CSVExporter: FileExporter {
-    override fun exportToFile(data: List<HashMap<String, String>>): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun exportToFile(data: DbResult): Boolean {
+        val out = FileWriter(data.exportSessionId + ".csv")
+        val printer = CSVPrinter(out, CSVFormat.DEFAULT)
+        printer.printRecords(data.result)
+        out.close()
+        return true
     }
 }

@@ -1,13 +1,12 @@
 <dbConnectionDefinition>
     <dbConnections>
         <dbConnection>
-            <name></name>
-            <url></url>
-            <user></user>
-            <password></password>
-            <sqlDriver></sqlDriver>
-            <pageSize></pageSize>
-            <pageAdjusterType></pageAdjusterType>
+            <name>TESTCONNECTION</name>
+            <url>jdbc:oracle:thin:@ncvol7x3.netcologne.intern:1521:siebx</url>
+            <user>TRIPK</user>
+            <password>TRIPK01</password>
+            <pageSize>1</pageSize>
+            <pageAdjusterType>MYSQL</pageAdjusterType>
         </dbConnection>
     </dbConnections>
 </dbConnectionDefinition>

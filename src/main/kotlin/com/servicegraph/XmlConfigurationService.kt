@@ -16,7 +16,7 @@ object XmlConfigurationService {
     }
 
     fun getMultiExport(name: String): DbMultiExport? {
-        return getMultiExports().firstOrNull { it.name.equals(name) }
+        return getMultiExports().firstOrNull { it.name == name }
     }
 
     fun getDbConnections(): List<DbConnection> {
@@ -24,14 +24,14 @@ object XmlConfigurationService {
     }
 
     fun getDbConnection(name: String): DbConnection? {
-        return getDbConnections().firstOrNull { it.name.equals(name) }
+        return getDbConnections().firstOrNull { it.name == name }
     }
 
     fun getDbQueries(): List<DbQuery> {
         return xmlMapper.readValue(File(FILE_QUERIES), DbQueryDefinition::class.java).dbQueries
     }
 
-    fun getDbQuery(name: String): DbQuery {
-        return getDbQueries().first{ it.name.equals(name) }
+    fun getDbQuery(name: String): DbQuery? {
+        return getDbQueries().firstOrNull{ it.name == name }
     }
 }
