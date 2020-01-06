@@ -1,0 +1,13 @@
+<dbConnectionDefinition>
+    <dbConnections>
+        <dbConnection>
+            <name></name>
+            <url></url>
+            <user></user>
+            <password></password>
+            <sqlDriver></sqlDriver>
+            <pageSize></pageSize>
+            <pageAdjusterType></pageAdjusterType>
+        </dbConnection>
+    </dbConnections>
+</dbConnectionDefinition>

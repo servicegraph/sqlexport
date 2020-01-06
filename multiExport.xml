@@ -1,0 +1,11 @@
+<dbMultiExportDefinition>
+    <dbMultiExports>
+        <dbMultiExport>
+            <name></name>
+            <queries>
+                <query></query>
+                <query></query>
+            </queries>
+        </dbMultiExport>
+    </dbMultiExports>
+</dbMultiExportDefinition>

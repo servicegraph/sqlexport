@@ -1,0 +1,10 @@
+<dbQueryDefinition>
+    <dbQueries>
+        <dbQuery>
+            <name>TESTSQL1</name>
+            <sql>SELECT 'XXX'</sql>
+            <connectionName>TESTCONNECTION</connectionName>
+        </dbQuery>
+    </dbQueries>
+</dbQueryDefinition>
+
