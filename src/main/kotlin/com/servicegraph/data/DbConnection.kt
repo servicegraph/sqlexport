@@ -5,9 +5,8 @@ data class DbConnection (
     var url: String,
     var user: String,
     var password: String,
-    var sqlDriver: String,
     var pageSize: Int,
     var pageAdjusterType: PageAdjusterType
 ) {
-    constructor(): this("", "", "", "", "", 0, PageAdjusterType.MYSQL)
+    constructor(): this("", "", "", "", 0, PageAdjusterType.MYSQL)
 }

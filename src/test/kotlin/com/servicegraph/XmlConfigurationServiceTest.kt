@@ -5,38 +5,37 @@ import org.junit.Test
 import org.junit.Assert.*
 
 class XmlConfigurationServiceTest {
-    val xmlConfigurationService = XmlConfigurationService()
 
     @Test
     fun getMultiExports() {
-        val res = xmlConfigurationService.getMultiExports()
+        val res = XmlConfigurationService.getMultiExports()
         assertEquals(1, res.size)
     }
 
     @Test
     fun getMultiExport() {
-        val res = xmlConfigurationService.getMultiExport("")
+        val res = XmlConfigurationService.getMultiExport("")
     }
 
     @Test
     fun getDbConnection() {
-        val res = xmlConfigurationService.getDbConnection("")
+        val res = XmlConfigurationService.getDbConnection("")
     }
 
     @Test
     fun getDbConnections() {
-        val res = xmlConfigurationService.getDbConnections()
+        val res = XmlConfigurationService.getDbConnections()
         assertEquals(1, res.size)
     }
 
     @Test
     fun getDbQueries() {
-        val res = xmlConfigurationService.getDbQueries()
+        val res = XmlConfigurationService.getDbQueries()
         assertEquals(1, res.size)
     }
 
     @Test
     fun getDbQuery() {
-        val res = xmlConfigurationService.getDbQuery("")
+        val res = XmlConfigurationService.getDbQuery("")
     }
 }
