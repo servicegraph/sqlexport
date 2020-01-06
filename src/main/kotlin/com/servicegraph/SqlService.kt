@@ -7,18 +7,20 @@ import com.servicegraph.pageAdjuster.SqlPageAdjuster
 import java.sql.DriverManager
 
 object SqlService {
-    fun executeSql(dbConnection: DbConnection, dbQuery: DbQuery, pageStart: Int = 0, pageEnd: Int = 1000, dbResult: DbResult): DbResult {
+    fun executeSql(dbConnection: DbConnection, dbQuery: DbQuery, pageStart: Int = 0, pageEnd: Int = 10000, dbResult: DbResult): DbResult {
         var sql = ""
         var columnsCount: Int
         var rowResult: ArrayList<Any>
         var header = ArrayList<String>()
 
+        // Adjust sql to paged
         if(dbQuery.paged) {
-            sql = (SqlPageAdjuster.SQL_PAGE_ADJUSTER_MAP[dbConnection.pageAdjusterType] ?: error("")).adjustSqlToPaged(sql)
+            sql = (SqlPageAdjuster.SQL_PAGE_ADJUSTER_MAP[dbConnection.pageAdjusterType] ?: error("")).adjustSqlToPaged(sql, pageStart, pageEnd)
         } else {
             sql = dbQuery.sql
         }
 
+        // Build up connection
         var c = DriverManager.getConnection(dbConnection.url, dbConnection.user, dbConnection.password)
         c.isReadOnly = true
         var rs = c.createStatement().executeQuery(sql)
