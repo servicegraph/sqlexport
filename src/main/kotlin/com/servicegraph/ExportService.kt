@@ -1,23 +1,31 @@
 package com.servicegraph
 
 import com.servicegraph.data.DbResult
-import com.servicegraph.data.FileExportType
 import com.servicegraph.fileExporter.FileExporter
+import java.util.*
 
 object ExportService {
-    fun exportMulti(multiExportName: String, fileExportType: FileExportType = FileExportType.CSV){
+    fun exportMulti(
+        multiExportName: String,
+        fileExportType: FileExporter.FileExportType = FileExporter.FileExportType.CSV,
+        exportSessionId: String = UUID.randomUUID().toString()
+    ){
         XmlConfigurationService.getMultiExport(multiExportName)!!.queries.forEach {
-            export(it, fileExportType)
+            export(it, fileExportType, exportSessionId)
         }
     }
 
-    fun export(dbQueryName: String, fileExportType: FileExportType = FileExportType.CSV) {
+    fun export(
+        dbQueryName: String,
+        fileExportType: FileExporter.FileExportType = FileExporter.FileExportType.CSV,
+        exportSessionId: String = UUID.randomUUID().toString()
+    ) {
         val query = XmlConfigurationService.getDbQuery(dbQueryName)?: error("Query has not been found")
         val connection = XmlConfigurationService.getDbConnection(query.connectionName)?: error("Db-Connection has not been found")
         var pageStart: Int
         var pageEnd: Int = -1
         var fileExportResult:Boolean
-        val dbResult = DbResult()
+        val dbResult = DbResult(exportSessionId = exportSessionId)
 
         if(query.paged){
             do {

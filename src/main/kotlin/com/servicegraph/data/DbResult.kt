@@ -5,7 +5,8 @@ import kotlin.collections.ArrayList
 
 data class DbResult (
     var page: Int = 1,
-    var exportSessionId: String = UUID.randomUUID().toString(),
+    var singleSessionId: String = UUID.randomUUID().toString(),
+    var exportSessionId: String,
     var header: ArrayList<String> = ArrayList(),
     val result: ArrayList<ArrayList<Any>> = ArrayList()
 ) {
