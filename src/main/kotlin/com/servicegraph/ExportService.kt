@@ -1,6 +1,6 @@
 package com.servicegraph
 
-import com.servicegraph.data.DbResult
+import com.servicegraph.data.FileExportSession
 import com.servicegraph.fileExporter.FileExporter
 import java.util.*
 
@@ -20,23 +20,36 @@ object ExportService {
         fileExportType: FileExporter.FileExportType = FileExporter.FileExportType.CSV,
         exportSessionId: String = UUID.randomUUID().toString()
     ) {
+        val fileExporter = (FileExporter.EXPORT_TYPE_MAP[fileExportType] ?: error("No valid exporter for Export-Type found"))
         val query = XmlConfigurationService.getDbQuery(dbQueryName)?: error("Query has not been found")
         val connection = XmlConfigurationService.getDbConnection(query.connectionName)?: error("Db-Connection has not been found")
-        var pageStart: Int
-        var pageEnd: Int = -1
-        var fileExportResult:Boolean
-        val dbResult = DbResult(exportSessionId = exportSessionId)
+
+        var fileExportResult: Boolean
+        val fileExportSession = FileExportSession("export", exportSessionId = exportSessionId)
 
         if(query.paged){
+            var page = 0
+
+            if(!fileExporter.supportsPaging()){
+                error("The chosen file-exporter does not support paging and therefore the configuration seems wrong")
+            }
+
+            fileExporter.startExport(fileExportSession)
+
             do {
-                pageStart = pageEnd + 1
-                pageEnd = pageStart + connection.pageSize - 1
-                val pagedSqlQueryResult = SqlService.executeSql(connection, query, pageStart, pageEnd, dbResult)
-                fileExportResult = (FileExporter.EXPORT_TYPE_MAP[fileExportType] ?: error("No valid export type found")).exportToFile(pagedSqlQueryResult)
-            } while (pagedSqlQueryResult != null && fileExportResult)
+                val pagedSqlQueryResult = SqlService.executeSql(connection, query, page)
+                fileExportResult = fileExporter.exportData(pagedSqlQueryResult, fileExportSession)
+                page += 1
+            } while (pagedSqlQueryResult.data.size != 0 && fileExportResult)
+
+            fileExporter.endExport(fileExportSession)
         } else {
-            val sqlQueryResult = SqlService.executeSql(connection, query, dbResult = dbResult)
-            val fileExportResult = (FileExporter.EXPORT_TYPE_MAP[fileExportType] ?: error("No valid export type found")).exportToFile(sqlQueryResult)
+            val sqlQueryResult = SqlService.executeSql(connection, query, null)
+            val fileExportResult = fileExporter.exportNonPaged(sqlQueryResult, fileExportSession)
         }
+    }
+
+    fun finalize(){
+        SqlService.closeConnections()
     }
 }

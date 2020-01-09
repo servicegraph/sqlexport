@@ -1,9 +1,31 @@
 package com.servicegraph.fileExporter
 
 import com.servicegraph.data.DbResult
+import com.servicegraph.data.FileExportSession
+import java.io.File
+import kotlin.math.exp
 
-interface FileExporter {
-    fun exportToFile(data: DbResult): Boolean
+abstract class FileExporter {
+    fun exportNonPaged(data: DbResult, fileExportSession: FileExportSession): Boolean {
+        createExportFolder(File(fileExportSession.exportFolder))
+        var start = startExport(fileExportSession)
+        var export = exportData(data, fileExportSession)
+        var end = endExport(fileExportSession)
+
+        return start && export && end
+    }
+
+    private fun createExportFolder(file: File){
+        if(file.exists()){
+            file.mkdirs()
+        }
+    }
+
+    open fun startExport(fileExportSession: FileExportSession): Boolean = true
+    abstract fun exportData(data: DbResult, fileExportSession: FileExportSession): Boolean
+    open fun endExport(fileExportSession: FileExportSession): Boolean = true
+
+    fun supportsPaging() = true
 
     enum class FileExportType {
         CSV, EXCEL

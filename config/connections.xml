@@ -3,10 +3,10 @@
         <dbConnection>
             <name>TESTCONNECTION</name>
             <url>jdbc:oracle:thin:@ncvol7x3.netcologne.intern:1521:siebx</url>
-            <user>TRIPK</user>
-            <password>TRIPK01</password>
-            <pageSize>1</pageSize>
-            <pageAdjusterType>MYSQL</pageAdjusterType>
+            <user>XXX</user>
+            <password>XXX</password>
+            <pageSize>1000</pageSize>
+            <pageAdjusterType>ORACLE</pageAdjusterType>
         </dbConnection>
     </dbConnections>
 </dbConnectionDefinition>

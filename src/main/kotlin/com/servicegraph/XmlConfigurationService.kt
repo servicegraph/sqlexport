@@ -7,9 +7,10 @@ import java.io.File
 object XmlConfigurationService {
     val xmlMapper = XmlMapper()
 
-    private val FILE_CONNECTIONS = "connections.xml"
-    private val FILE_MULTI_EXPORT = "multiExport.xml"
-    private val FILE_QUERIES = "queries.xml"
+    private val FILE_CONNECTIONS = "config/connections.xml"
+    private val FILE_MULTI_EXPORT = "config/multiExport.xml"
+    private val FILE_QUERIES = "config/queries.xml"
+    private val SQL_FOLDER = "config/sql/"
 
     fun getMultiExports(): List<DbMultiExport> {
         return xmlMapper.readValue(File(FILE_MULTI_EXPORT), DbMultiExportDefinition::class.java).dbMultiExports
@@ -32,6 +33,8 @@ object XmlConfigurationService {
     }
 
     fun getDbQuery(name: String): DbQuery? {
-        return getDbQueries().firstOrNull{ it.name == name }
+        val q = getDbQueries().firstOrNull{ it.name == name }
+        q?.sql = File(SQL_FOLDER + q?.sqlFile).readText()
+        return q
     }
 }

@@ -1,16 +1,16 @@
 package com.servicegraph.data
 
-import java.util.*
 import kotlin.collections.ArrayList
 
 data class DbResult (
-    var page: Int = 1,
-    var singleSessionId: String = UUID.randomUUID().toString(),
-    var exportSessionId: String,
-    var header: ArrayList<String> = ArrayList(),
-    val result: ArrayList<ArrayList<Any>> = ArrayList()
+    var paged: Boolean,
+    var page: Int?,
+    var pageStart: Int?,
+    var pageEnd: Int?,
+    var header: ArrayList<String>,
+    val data: ArrayList<ArrayList<Any>>
 ) {
     fun addRow(line: ArrayList<Any>){
-         this.result.add(line)
+         this.data.add(line)
     }
 }

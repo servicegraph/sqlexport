@@ -2,8 +2,9 @@
     <dbQueries>
         <dbQuery>
             <name>TESTSQL1</name>
-            <sql>SELECT 'XXX' FROM DUAL</sql>
+            <sqlFile>TESTSQL1.sql</sqlFile>
             <connectionName>TESTCONNECTION</connectionName>
+            <paged>true</paged>
         </dbQuery>
     </dbQueries>
 </dbQueryDefinition>
