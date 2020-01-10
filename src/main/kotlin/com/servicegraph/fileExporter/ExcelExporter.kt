@@ -5,7 +5,7 @@ import com.servicegraph.data.FileExportSession
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.FileOutputStream
 
-class ExcelExporter: FileExporter() {
+class ExcelExporter: FileExporter(false) {
     override fun exportData(data: DbResult, fileExportSession: FileExportSession): Boolean {
         val wb = XSSFWorkbook()
         val sh = wb.createSheet(fileExportSession.sqlSessionId)

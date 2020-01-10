@@ -2,9 +2,12 @@ package com.servicegraph
 
 import com.servicegraph.data.FileExportSession
 import com.servicegraph.fileExporter.FileExporter
+import org.slf4j.LoggerFactory
 import java.util.*
 
 object ExportService {
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     fun exportMulti(
         multiExportName: String,
         fileExportType: FileExporter.FileExportType = FileExporter.FileExportType.CSV,
@@ -19,7 +22,7 @@ object ExportService {
         dbQueryName: String,
         fileExportType: FileExporter.FileExportType = FileExporter.FileExportType.CSV,
         exportSessionId: String = UUID.randomUUID().toString()
-    ) {
+    ): Boolean {
         val fileExporter = (FileExporter.EXPORT_TYPE_MAP[fileExportType] ?: error("No valid exporter for Export-Type found"))
         val query = XmlConfigurationService.getDbQuery(dbQueryName)?: error("Query has not been found")
         val connection = XmlConfigurationService.getDbConnection(query.connectionName)?: error("Db-Connection has not been found")
@@ -30,7 +33,7 @@ object ExportService {
         if(query.paged){
             var page = 0
 
-            if(!fileExporter.supportsPaging()){
+            if(!fileExporter.supportsPaging){
                 error("The chosen file-exporter does not support paging and therefore the configuration seems wrong")
             }
 
@@ -43,10 +46,14 @@ object ExportService {
             } while (pagedSqlQueryResult.data.size != 0 && fileExportResult)
 
             fileExporter.endExport(fileExportSession)
+
+            fileExportResult = true
         } else {
             val sqlQueryResult = SqlService.executeSql(connection, query, null)
-            val fileExportResult = fileExporter.exportNonPaged(sqlQueryResult, fileExportSession)
+            fileExportResult = fileExporter.exportNonPaged(sqlQueryResult, fileExportSession)
         }
+
+        return fileExportResult
     }
 
     fun finalize(){

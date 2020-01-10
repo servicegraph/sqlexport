@@ -6,7 +6,7 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 import java.io.FileWriter
 
-class CSVExporter: FileExporter() {
+class CSVExporter: FileExporter(true) {
     override fun startExport(fileExportSession: FileExportSession): Boolean {
         val out = FileWriter(fileExportSession.exportFolder + "/" + fileExportSession.exportSessionId + ".csv")
         fileExportSession.sessionExportPointer = CSVPrinter(out, CSVFormat.DEFAULT)
