@@ -2,6 +2,7 @@ package com.servicegraph
 
 import com.servicegraph.fileExporter.FileExporter
 import org.slf4j.LoggerFactory
+import java.sql.DriverManager
 
 fun main(args: Array<String>){
     val logger = LoggerFactory.getLogger("Batch-Script")

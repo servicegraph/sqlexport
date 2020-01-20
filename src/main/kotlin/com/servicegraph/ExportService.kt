@@ -28,7 +28,7 @@ object ExportService {
         val connection = XmlConfigurationService.getDbConnection(query.connectionName)?: error("Db-Connection has not been found")
 
         var fileExportResult: Boolean
-        val fileExportSession = FileExportSession("export", exportSessionId = exportSessionId)
+        val fileExportSession = FileExportSession("export", exportFileName = query.exportFileName, exportSessionId = exportSessionId)
 
         if(query.paged){
             var page = 0

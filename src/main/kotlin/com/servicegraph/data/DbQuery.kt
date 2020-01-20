@@ -5,7 +5,8 @@ class DbQuery (
     var sql: String,
     var sqlFile: String,
     var connectionName: String,
-    var paged: Boolean = false
+    var paged: Boolean = false,
+    val exportFileName: String
 ) {
-    constructor(): this("", "", "", "")
+    constructor(): this("", "", "", "", false, "")
 }
