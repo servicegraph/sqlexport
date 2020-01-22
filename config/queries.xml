@@ -5,6 +5,7 @@
             <sqlFile>TESTSQL1.sql</sqlFile>
             <connectionName>TESTCONNECTION</connectionName>
             <paged>true</paged>
+            <type>QUERY</type>
         </dbQuery>
     </dbQueries>
 </dbQueryDefinition>

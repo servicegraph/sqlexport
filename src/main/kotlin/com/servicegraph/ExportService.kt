@@ -1,5 +1,6 @@
 package com.servicegraph
 
+import com.servicegraph.data.DbQueryType
 import com.servicegraph.data.FileExportSession
 import com.servicegraph.fileExporter.FileExporter
 import org.slf4j.LoggerFactory
@@ -23,6 +24,8 @@ object ExportService {
         fileExportType: FileExporter.FileExportType = FileExporter.FileExportType.CSV,
         exportSessionId: String = UUID.randomUUID().toString()
     ): Boolean {
+        logger.info("Starting of execution SQL ${dbQueryName}")
+
         val fileExporter = (FileExporter.EXPORT_TYPE_MAP[fileExportType] ?: error("No valid exporter for Export-Type found"))
         val query = XmlConfigurationService.getDbQuery(dbQueryName)?: error("Query has not been found")
         val connection = XmlConfigurationService.getDbConnection(query.connectionName)?: error("Db-Connection has not been found")
@@ -40,7 +43,7 @@ object ExportService {
             fileExporter.startExport(fileExportSession)
 
             do {
-                val pagedSqlQueryResult = SqlService.executeSql(connection, query, page)
+                val pagedSqlQueryResult = SqlService.executeQuery(connection, query, page)
                 fileExportResult = fileExporter.exportData(pagedSqlQueryResult, fileExportSession)
                 page += 1
             } while (pagedSqlQueryResult.data.size != 0 && fileExportResult)
@@ -49,10 +52,15 @@ object ExportService {
 
             fileExportResult = true
         } else {
-            val sqlQueryResult = SqlService.executeSql(connection, query, null)
-            fileExportResult = fileExporter.exportNonPaged(sqlQueryResult, fileExportSession)
+            if(query.type == DbQueryType.EXECUTION){
+                fileExportResult = SqlService.execute(connection, query)
+            } else {
+                val sqlQueryResult = SqlService.executeQuery(connection, query)
+                fileExportResult = fileExporter.exportNonPaged(sqlQueryResult, fileExportSession)
+            }
         }
 
+        logger.info("Finishing of execution SQL ${dbQueryName}")
         return fileExportResult
     }
 

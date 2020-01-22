@@ -10,7 +10,11 @@ import java.sql.DriverManager
 object SqlService {
     private val dbConnectionsCache = HashMap<String, Connection>()
 
-    fun executeSql(dbConnection: DbConnection, dbQuery: DbQuery, page: Int?): DbResult {
+    fun execute(dbConnection: DbConnection, dbQuery: DbQuery): Boolean {
+        return this.getConnection(dbConnection).createStatement().execute(dbQuery.sql)
+    }
+
+    fun executeQuery(dbConnection: DbConnection, dbQuery: DbQuery, page: Int? = null): DbResult {
         var sql: String
         var columnsCount: Int
         var rowResult: ArrayList<Any>
@@ -19,9 +23,7 @@ object SqlService {
         var pageStart: Int? = null
         var pageEnd: Int? = null
 
-
-
-       // Adjust sql to paged
+        // Adjust sql to paged
         if(dbQuery.paged && page != null) {
             pageStart = page * dbConnection.pageSize
             pageEnd = (page + 1) * dbConnection.pageSize - 1
@@ -31,21 +33,8 @@ object SqlService {
             sql = dbQuery.sql
         }
 
-        // Build up connection
-        var c: Connection? = null
-
         try {
-            var c: Connection
-
-            if(dbConnectionsCache[dbConnection.url] == null){
-                c = DriverManager.getConnection(dbConnection.url, dbConnection.user, dbConnection.password)
-                c.isReadOnly = true
-                dbConnectionsCache.put(dbConnection.url, c)
-            } else {
-                c = dbConnectionsCache[dbConnection.url]!!
-            }
-
-            var rs = c.createStatement().executeQuery(sql)
+            var rs = getConnection(dbConnection).createStatement().executeQuery(sql)
 
             // Get Column name
             columnsCount = rs.metaData.columnCount
@@ -62,10 +51,27 @@ object SqlService {
                 data.add(rowResult)
             }
         } finally {
-            c?.close()
+
         }
 
         return DbResult(dbQuery.paged, page, pageStart, pageEnd, header, data)
+    }
+
+    private fun getConnection(dbConnection: DbConnection): Connection {
+        return this.getConnection(dbConnection.url, dbConnection.user, dbConnection.password)
+    }
+
+    private fun getConnection(url: String, user: String, password: String): Connection {
+        var c: Connection
+
+        if(dbConnectionsCache[url] == null){
+            c = DriverManager.getConnection(url, user, password)
+            dbConnectionsCache.put(url, c)
+        } else {
+            c = dbConnectionsCache[url]!!
+        }
+
+        return c
     }
 
     fun closeConnections(){
