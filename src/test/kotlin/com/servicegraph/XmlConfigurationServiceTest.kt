@@ -19,7 +19,7 @@ class XmlConfigurationServiceTest {
 
     @Test
     fun getDbConnection() {
-        val res = XmlConfigurationService.getDbConnection("")
+        val res = XmlConfigurationService.getDbConnection("", "")
     }
 
     @Test

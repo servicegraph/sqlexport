@@ -11,16 +11,18 @@ object ExportService {
 
     fun exportMulti(
         multiExportName: String,
+        environment: String,
         fileExportType: FileExporter.FileExportType = FileExporter.FileExportType.CSV,
         exportSessionId: String = UUID.randomUUID().toString()
     ){
         XmlConfigurationService.getMultiExport(multiExportName)!!.queries.forEach {
-            export(it, fileExportType, exportSessionId)
+            export(it, environment, fileExportType, exportSessionId)
         }
     }
 
     fun export(
         dbQueryName: String,
+        environment: String,
         fileExportType: FileExporter.FileExportType = FileExporter.FileExportType.CSV,
         exportSessionId: String = UUID.randomUUID().toString()
     ): Boolean {
@@ -28,10 +30,10 @@ object ExportService {
 
         val fileExporter = (FileExporter.EXPORT_TYPE_MAP[fileExportType] ?: error("No valid exporter for Export-Type found"))
         val query = XmlConfigurationService.getDbQuery(dbQueryName)?: error("Query has not been found")
-        val connection = XmlConfigurationService.getDbConnection(query.connectionName)?: error("Db-Connection has not been found")
+        val connection = XmlConfigurationService.getDbConnection(query.connectionName, environment)?: error("Db-Connection has not been found")
 
         var fileExportResult: Boolean
-        val fileExportSession = FileExportSession("export", exportFileName = query.exportFileName, exportSessionId = exportSessionId)
+        val fileExportSession = FileExportSession("export\\${environment}", exportFileName = query.exportFileName, exportSessionId = exportSessionId)
 
         if(query.paged){
             var page = 0

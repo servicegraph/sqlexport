@@ -8,7 +8,8 @@ data class DbConnection (
     var user: String,
     var password: String,
     var pageSize: Int,
+    var environment: String,
     var pageAdjusterType: SqlPageAdjuster.PageAdjusterType
 ) {
-    constructor(): this("", "", "", "", 0, SqlPageAdjuster.PageAdjusterType.MYSQL)
+    constructor(): this("", "", "", "", 0, "", SqlPageAdjuster.PageAdjusterType.MYSQL)
 }

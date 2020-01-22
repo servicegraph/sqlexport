@@ -12,20 +12,20 @@ fun main(args: Array<String>){
     } else {
         when (args[0]) {
             "--export" -> {
-                logger.info("Starting of SQL-Export ${args[1]}")
+                logger.info("Starting of SQL-Export ${args[1]} for Environemt ${args[2]}")
 
-                ExportService.export(args[1], FileExporter.FileExportType.CSV)
+                ExportService.export(args[1], args[3], FileExporter.FileExportType.CSV)
                 ExportService.finalize()
 
-                logger.info("Finishing of SQL-Export ${args[1]}")
+                logger.info("Finishing of SQL-Export ${args[1]} for Environemt ${args[2]}")
             }
             "--exportMulti" -> {
-                logger.info("Starting of Multi-SQL-Export ${args[1]}")
+                logger.info("Starting of Multi-SQL-Export ${args[1]} for Environemt ${args[2]}")
 
-                ExportService.exportMulti(args[1])
+                ExportService.exportMulti(args[1], args[3])
                 ExportService.finalize()
 
-                logger.info("Finishing of Multi-SQL-Export ${args[1]}")
+                logger.info("Finishing of Multi-SQL-Export ${args[1]} for Environemt ${args[2]}")
             }
             else -> logger.error("Parameter not valid")
         }

@@ -18,7 +18,7 @@ abstract class FileExporter (
     }
 
     private fun createExportFolder(file: File){
-        if(file.exists()){
+        if(!file.exists()){
             file.mkdirs()
         }
     }

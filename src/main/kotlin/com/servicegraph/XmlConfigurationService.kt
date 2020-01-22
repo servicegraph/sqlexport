@@ -24,8 +24,8 @@ object XmlConfigurationService {
         return xmlMapper.readValue(File(FILE_CONNECTIONS), DbConnectionDefinition::class.java).dbConnections
     }
 
-    fun getDbConnection(name: String): DbConnection? {
-        return getDbConnections().firstOrNull { it.name == name }
+    fun getDbConnection(name: String, environment: String): DbConnection? {
+        return getDbConnections().firstOrNull { it.name == name && it.environment == environment }
     }
 
     fun getDbQueries(): List<DbQuery> {
