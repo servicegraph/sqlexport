@@ -14,12 +14,12 @@ class XmlConfigurationServiceTest {
 
     @Test
     fun getMultiExport() {
-        val res = XmlConfigurationService.getMultiExport("")
+        XmlConfigurationService.getMultiExport("")
     }
 
     @Test
     fun getDbConnection() {
-        val res = XmlConfigurationService.getDbConnection("", "")
+        XmlConfigurationService.getDbConnection("", "")
     }
 
     @Test
@@ -36,6 +36,6 @@ class XmlConfigurationServiceTest {
 
     @Test
     fun getDbQuery() {
-        val res = XmlConfigurationService.getDbQuery("")
+        XmlConfigurationService.getDbQuery("")
     }
 }

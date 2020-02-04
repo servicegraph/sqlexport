@@ -4,18 +4,21 @@ import com.servicegraph.data.DbResult
 import com.servicegraph.data.FileExportSession
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
-import java.io.FileWriter
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
+import java.nio.charset.StandardCharsets
+
 
 class CSVExporter: FileExporter(true) {
     override fun startExport(fileExportSession: FileExportSession): Boolean {
-        val out = FileWriter(fileExportSession.exportFolder + "/" + fileExportSession.exportFileName)
+        val out = OutputStreamWriter(FileOutputStream(fileExportSession.exportFolder + "/" + fileExportSession.exportFileName), StandardCharsets.UTF_8)
         fileExportSession.sessionExportPointer = CSVPrinter(out, CSVFormat.DEFAULT.withDelimiter(';'))
 
         return true
     }
 
     override fun exportData(data: DbResult, fileExportSession: FileExportSession): Boolean {
-        var csvPrinter = (fileExportSession.sessionExportPointer as CSVPrinter)
+        val csvPrinter = (fileExportSession.sessionExportPointer as CSVPrinter)
         csvPrinter.printRecord(data.header)
         csvPrinter.printRecords(data.data)
 

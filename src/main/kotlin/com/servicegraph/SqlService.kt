@@ -15,20 +15,21 @@ object SqlService {
     }
 
     fun executeQuery(dbConnection: DbConnection, dbQuery: DbQuery, page: Int? = null): DbResult {
-        var sql: String
-        var columnsCount: Int
+        val sql: String
+        val columnsCount: Int
         var rowResult: ArrayList<Any>
-        var header = ArrayList<String>()
-        var data = ArrayList<ArrayList<Any>>()
+        val header = ArrayList<String>()
+        val data = ArrayList<ArrayList<Any>>()
         var pageStart: Int? = null
         var pageEnd: Int? = null
+        val pageAdjuster = SqlPageAdjuster.SQL_PAGE_ADJUSTER_MAP[dbConnection.pageAdjusterType] ?: error("")
 
         // Adjust sql to paged
         if(dbQuery.paged && page != null) {
             pageStart = page * dbConnection.pageSize
             pageEnd = (page + 1) * dbConnection.pageSize - 1
 
-            sql = (SqlPageAdjuster.SQL_PAGE_ADJUSTER_MAP[dbConnection.pageAdjusterType] ?: error("")).adjustSqlToPaged(dbQuery.sql, pageStart, pageEnd)
+            sql = pageAdjuster.adjustSqlToPaged(dbQuery.sql, dbQuery.pageSortColumn, pageStart, pageEnd)
         } else {
             sql = dbQuery.sql
         }
@@ -46,7 +47,9 @@ object SqlService {
             while (rs.next()) {
                 rowResult = ArrayList()
                 for (i in 1 .. columnsCount){
-                    rowResult.add(rs.getString(i))
+                    if(!dbQuery.paged || header[i-1] != pageAdjuster.pagingColumn()){
+                        rowResult.add(rs.getString(i))
+                    }
                 }
                 data.add(rowResult)
             }
