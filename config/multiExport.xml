@@ -2,6 +2,8 @@
     <dbMultiExports>
         <dbMultiExport>
             <name></name>
+            <charset></charset>
+            <exportFolder></exportFolder>
             <queries>
                 <query></query>
                 <query></query>

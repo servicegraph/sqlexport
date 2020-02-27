@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets
 
 class CSVExporter: FileExporter(true) {
     override fun startExport(fileExportSession: FileExportSession): Boolean {
-        val out = OutputStreamWriter(FileOutputStream(fileExportSession.exportFolder + "/" + fileExportSession.exportFileName), StandardCharsets.UTF_8)
+        val out = OutputStreamWriter(FileOutputStream(fileExportSession.exportFolder + "/" + fileExportSession.exportFileName), fileExportSession.charset)
         fileExportSession.sessionExportPointer = CSVPrinter(out, CSVFormat.DEFAULT.withDelimiter(';'))
 
         return true

@@ -4,6 +4,7 @@ import com.servicegraph.data.DbQueryType
 import com.servicegraph.data.FileExportSession
 import com.servicegraph.fileExporter.FileExporter
 import org.slf4j.LoggerFactory
+import java.nio.charset.Charset
 import java.util.*
 
 object ExportService {
@@ -12,11 +13,12 @@ object ExportService {
     fun exportMulti(
         multiExportName: String,
         environment: String,
-        fileExportType: FileExporter.FileExportType = FileExporter.FileExportType.CSV,
         exportSessionId: String = UUID.randomUUID().toString()
     ){
-        XmlConfigurationService.getMultiExport(multiExportName)!!.queries.forEach {
-            export(it, environment, fileExportType, exportSessionId)
+        val multiExport = XmlConfigurationService.getMultiExport(multiExportName)!!
+
+        multiExport.queries.forEach {
+            export(it, environment, multiExport.fileExportType, Charset.forName(multiExport.charset), exportSessionId)
         }
     }
 
@@ -24,7 +26,9 @@ object ExportService {
         dbQueryName: String,
         environment: String,
         fileExportType: FileExporter.FileExportType = FileExporter.FileExportType.CSV,
-        exportSessionId: String = UUID.randomUUID().toString()
+        charset: Charset = Charset.defaultCharset(),
+        exportSessionId: String = UUID.randomUUID().toString(),
+        exportFolder: String = "export"
     ): Boolean {
         logger.info("Starting of execution SQL ${dbQueryName}")
 
@@ -33,7 +37,12 @@ object ExportService {
         val connection = XmlConfigurationService.getDbConnection(query.connectionName, environment)?: error("Db-Connection has not been found")
 
         var fileExportResult: Boolean
-        val fileExportSession = FileExportSession("export\\${environment}", exportFileName = query.exportFileName, exportSessionId = exportSessionId)
+        val fileExportSession = FileExportSession(
+            "${exportFolder}\\${environment}",
+            charset = charset,
+            exportFileName = query.exportFileName,
+            exportSessionId = exportSessionId
+        )
 
         if(query.paged){
             var page = 0
